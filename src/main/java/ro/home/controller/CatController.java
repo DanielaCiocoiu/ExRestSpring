@@ -7,24 +7,7 @@ import ro.home.model.Cat;
 import java.util.List;
 import java.util.stream.Collectors;
 
-/*
-Declara o clasa Produs care are: id, nume, pret, categorie (hint: enum), stoc
-Declara o lista cu niste produse predefinite.
 
-Defineste end-pointuri prin care sa obtii:
- * toate produsele (*)
- * produsul cu un anumit id
- * valoarea totala a produselor dintr-o categorie
- * valoare stocului unui produs dupa un id datele
- * toate produsele dintr-o categorie (*)
- * toate produsele dintr-o gama de pret (*)
- * toate produsele cu stoc epuizat (*)
-
-Defineste in Postman o colectie cu cate un request definit pentru fiecare end-point
-
-Functionalitatile marcate cu (*) pot fi realizare intr-un singur end-point cu mai multe filtre
-
-*/
 
 @RestController
 @RequestMapping("/cats")
@@ -36,6 +19,7 @@ public class CatController {
     );
 
     @GetMapping
+    //http://109.101.227.234:8080/cats?ageMin=3&ageMax=2
     public List<Cat> getAll(@RequestParam(value = "ageMin", required = false) Integer ageMin,
                             @RequestParam(value = "ageMax", required = false) Integer ageMax){
 
@@ -45,7 +29,7 @@ public class CatController {
                 .collect(Collectors.toList());
     }
 
-    // GET http://localhost:8080/cats/1
+    // GET http://localhost:8871/cats/1
     // ResponseEntity - obiectul care cumuleaza datele raspunsului: content, headere, status
     @GetMapping("/{id}")
     public ResponseEntity getCat(@PathVariable("id") int id){

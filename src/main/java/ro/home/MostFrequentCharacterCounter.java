@@ -22,7 +22,7 @@ import java.util.HashMap;
     @Override
     public String getCharacter() {
         int count  = 0;
-                HashMap<Integer, String> countString = new HashMap<>();
+                HashMap<Integer, Character> countString = new HashMap<>();
         for (Integer st : countString)
 
 
