@@ -34,7 +34,7 @@ public class ProductController {
     private static final List<Product> PRODUCTS = List.of(
             new Product(1, "bread", 10, Category.FOOD, 10),
             new Product(2, "oil", 11, Category.FOOD, 15),
-            new Product(3, "dresses", 20, Category.TEXTILE, 25),
+            new Product(3, "dresses", 20, Category.TEXTILE, 0),
             new Product(4, "jeans", 25, Category.TEXTILE, 140),
             new Product(5, "sugar", 25, Category.FOOD, 120),
             new Product(6, "trousers", 25, Category.TEXTILE, 0)
@@ -50,22 +50,20 @@ public class ProductController {
     public List<Product> getAll(@RequestParam(value = "category", required = false) Category category,
                                 @RequestParam(value = "priceMin", required = false) Integer priceMin,
                                 @RequestParam(value = "priceMax", required = false) Integer priceMax,
-                                @RequestParam(value = "stock", required = false) Integer minStock) {
+                                @RequestParam(value = "stock", required = false) Boolean stock) {
 
         return PRODUCTS.stream()
-                /*       .filter(p -> Category.FOOD == null || p.getCategory().equals(Category.FOOD))
-                       .filter(p -> priceMin == null || p.getPrice() >= priceMin)
-                       .filter(p -> priceMax == null || p.getPrice() <= priceMax)*/
-                .filter(p-> p.getStock() <= 0)
+                .filter(p -> category == null || p.getCategory().equals(category))// - fara hardcodare - aleg valoarea din Postman: ex FOOD sau TEXTILE
+                .filter(p -> priceMin == null || p.getPrice() >= priceMin)
+                .filter(p -> priceMax == null || p.getPrice() <= priceMax)
+                .filter(p -> stock == null || stock || p.getStock() == 0)
                 .collect(Collectors.toList());
-
-
     }
 
     // GET http://localhost:8871/products/1
     // produsul cu un anumit id
     @GetMapping("/{id}")
-    public ResponseEntity getproduct(@PathVariable("id") int id) {
+    public ResponseEntity<Product> getproduct(@PathVariable("id") int id) {
 
         var product = PRODUCTS.stream().filter(p -> p.getId() == id).findFirst().orElse(null);
         if (product != null) {
@@ -76,11 +74,11 @@ public class ProductController {
     }
 
 
-    //valoarea totala a produselor dintr-o categorie
+    //valoarea totala a produselor dintr-o categorie - fara hardcodare
     // GET http://localhost:8871/products/sum
     @GetMapping("/sum")
-    public long getSum() {
-        Integer sum = PRODUCTS.stream().filter(p -> p.getCategory() == Category.FOOD)
+    public long getSum(@RequestParam(value = "category") Category category) {
+        Integer sum = PRODUCTS.stream().filter(p -> p.getCategory().equals(category))
                 .map(x -> x.getPrice())
                 .reduce(0, Integer::sum);
         return sum;
@@ -93,7 +91,7 @@ public class ProductController {
     public int getStock(@PathVariable("id") int id) {
 
         Integer sum = PRODUCTS.stream().filter(p -> p.getId() == id)
-                .map(x -> x.getStock())
+                .map(p-> p.getStock())
                 .reduce(0, Integer::sum);
         return sum;
     }
