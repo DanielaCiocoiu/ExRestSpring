@@ -1,20 +1,32 @@
 package ro.home.model;
 
+import java.util.Objects;
+
 public class User {
 
-    private String username;
 
+    private Long id;
+    private String username;
+    private String password;
     private int age;
 
-    private String password;
-
-    public User(String username, int age, String password) {
+    public User(Long id, String username, String password, int age) {
+        this.id = id;
         this.username = username;
-        this.age = age;
         this.password = password;
+        this.age = age;
     }
 
-    public User() {
+    public User(){
+
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public String getUsername() {
@@ -25,14 +37,6 @@ public class User {
         this.username = username;
     }
 
-    public int getAge() {
-        return age;
-    }
-
-    public void setAge(int age) {
-        this.age = age;
-    }
-
     public String getPassword() {
         return password;
     }
@@ -41,12 +45,34 @@ public class User {
         this.password = password;
     }
 
+    public int getAge() {
+        return age;
+    }
+
+    public void setAge(int age) {
+        this.age = age;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof User)) return false;
+        User user = (User) o;
+        return id == user.id && age == user.age && Objects.equals(username, user.username) && Objects.equals(password, user.password);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, username, password, age);
+    }
+
     @Override
     public String toString() {
         return "User{" +
-                "username='" + username + '\'' +
-                ", age=" + age +
+                "id=" + id +
+                ", userbame='" + username + '\'' +
                 ", password='" + password + '\'' +
+                ", age=" + age +
                 '}';
     }
 }
