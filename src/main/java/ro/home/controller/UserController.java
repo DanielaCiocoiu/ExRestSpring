@@ -40,16 +40,13 @@ public class UserController {
         id++;
         users.add(user);
         return user;
-
     }
 
     // obtinere de useri (cu filtru de varsta minima optional)
     @GetMapping
-    public List<User> getUser(@RequestParam(value = "ageMin", required = false) Integer ageMin,
-                              @RequestParam(value = "ageMax", required = false) Integer ageMax) {
+    public List<User> getUser(@RequestParam(value = "ageMin", required = false) Integer ageMin) {
 
         return users.stream()
-                .filter(user -> ageMin == null || user.getAge() >= ageMin)
                 .filter(user -> ageMin == null || user.getAge() >= ageMin)
                 .collect(Collectors.toList());
     }
@@ -75,31 +72,31 @@ public class UserController {
     }
 
     //modificare a parolei utilizatorului
-    @PatchMapping("/{id}/name")
-    public ResponseEntity<User> updateName(@RequestParam("password") String password,
+    @PatchMapping("/{id}/password")
+    public ResponseEntity<User> updatePassword(@RequestParam("password") String password,
                                           @PathVariable("id") Long id) {
-        var dbDog = users.stream()
+        var dbUser = users.stream()
                 .filter(d -> d.getId().equals(id))
                 .findFirst()
                 .orElse(null);
 
-        if (dbDog != null) {
-            dbDog.setPassword(password);
-            return ResponseEntity.ok(dbDog);
+        if (dbUser != null) {
+            dbUser.setPassword(password);
+            return ResponseEntity.ok(dbUser);
         } else {
             return ResponseEntity.notFound().build();
         }
     }
 
     //stergere de utilizator dupa id
-    @DeleteMapping("/{id}")
-    public void delete(@PathVariable("id") Long id) {
+    @DeleteMapping("/id/{id}")
+    public void deleteId(@PathVariable("id") Long id) {
         users.removeIf(user -> user.getId().equals(id));
     }
 
     //stergete de utilizator dupa username
-    @DeleteMapping("/{username}")
-    public void delete(@PathVariable("id") String username) {
+    @DeleteMapping("/username/{username}")
+    public void deleteUserName(@PathVariable("username") String username) {
         users.removeIf(user -> user.getUsername().equals(username));
     }
 }
